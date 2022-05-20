@@ -22,3 +22,11 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - oauth2_db
+
+  user_agent:
+    build: ./user_agent/
+    command: python run.py 
+    volumes:
+      - ./user_agent:/code
+    ports:
+      - "8001:8001"
