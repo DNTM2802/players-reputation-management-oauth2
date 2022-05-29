@@ -58,7 +58,7 @@ ROOT_URLCONF = 'oauth2_web.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['oauth2_web/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
