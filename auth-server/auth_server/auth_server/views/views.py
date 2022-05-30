@@ -38,7 +38,7 @@ def login_view(request):
                 if next_hop:
                     return redirect(next_hop)
                 else:
-                    redirect("home")
+                    return redirect("home")
             else:
                 messages.error(request, "Invalid username or password.")
         else:
