@@ -34,7 +34,11 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
-                return redirect("home")
+                next_hop = request.GET.get("next", None)
+                if next_hop:
+                    return redirect(next_hop)
+                else:
+                    return redirect("home")
             else:
                 messages.error(request, "Invalid username or password.")
         else:
