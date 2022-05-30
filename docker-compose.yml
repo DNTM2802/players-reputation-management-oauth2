@@ -1,32 +1,19 @@
 version: "3.9"
    
 services:
-  oauth2_db:
-    image: postgres
-    volumes:
-      - ./oauth2_db/data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-  oauth2_web:
-    build: ./oauth2_web/
+
+  auth_server:
+    build: ./auth-server/
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./oauth2_web:/code
+      - ./auth-server:/code
     ports:
       - "8000:8000"
-    environment:
-      - POSTGRES_NAME=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    depends_on:
-      - oauth2_db
 
-  user_agent:
-    build: ./user_agent/
-    command: python run.py 
+  resource_server:
+    build: ./resource-server/
+    command: python manage.py runserver 0.0.0.0:8001
     volumes:
-      - ./user_agent:/code
+      - ./auth-server:/code
     ports:
       - "8001:8001"
