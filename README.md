@@ -1,6 +1,7 @@
 # players-reputation-management-oauth2
 
 ## OAuth2-Resource Server
+### Usage example
 Authorization endpoint example:
 ```
 http://localhost:8000/o/authorize?state=random_state_string&client_id=7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R&response_type=code&scope=read_3%20write
@@ -13,3 +14,6 @@ When an Access Token is provided for the above grant, it has the following const
 - It can only be used once to read the reputation and once to write it.
 
 If some of the above constraints are not met, the auth-resource server responds with an appropriate HTTP code and a JSON with some feedback.
+
+### Populating DB for testing
+Insert scripts available in `auth-server/sql_scripts/`
