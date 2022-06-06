@@ -17,7 +17,6 @@ from django.contrib import admin
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -28,7 +27,6 @@ SECRET_KEY = '0aiug(bez@idcedcq3g2)22=nzd6l61%ywny8ony9(*vv=lcpk'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -42,12 +40,16 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'rest_framework',
     'corsheaders',
-
+    # 'oauth', # Used for custom OAuth2 models
+    'accounts',
 ]
+
+# Users to authenticate are players
+AUTH_USER_MODEL = 'accounts.Player'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-      'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -55,11 +57,19 @@ REST_FRAMEWORK = {
 }
 
 OAUTH2_PROVIDER = {
-    # this is the list of available scopes
+    # 'OAUTH2_VALIDATOR_CLASS': 'oauth.validator.CustomValidator.CustomValidator', # custom OAuth2 validator class
     'SCOPES': {
-        'read': 'Read scope',
-        'write': 'Write scope',
-        'introspection': 'Introspect token scope',
+        'read': 'Read Player\'s Reputation (No anonymity)',
+        'read_2': 'Read Player\'s Reputation with anonymity level 2 (level 2 being most anonymous, level 10 being least anonymous)',
+        'read_3': 'Read Player\'s Reputation with anonymity level 3 (level 2 being most anonymous, level 10 being least anonymous)',
+        'read_4': 'Read Player\'s Reputation with anonymity level 4 (level 2 being most anonymous, level 10 being least anonymous)',
+        'read_5': 'Read Player\'s Reputation with anonymity level 5 (level 2 being most anonymous, level 10 being least anonymous)',
+        'read_6': 'Read Player\'s Reputation with anonymity level 6 (level 2 being most anonymous, level 10 being least anonymous)',
+        'read_7': 'Read Player\'s Reputation with anonymity level 7 (level 2 being most anonymous, level 10 being least anonymous)',
+        'read_8': 'Read Player\'s Reputation with anonymity level 8 (level 2 being most anonymous, level 10 being least anonymous)',
+        'read_9': 'Read Player\'s Reputation with anonymity level 9 (level 2 being most anonymous, level 10 being least anonymous)',
+        'read_10': 'Read Player\'s Reputation with anonymity level 10 (level 2 being most anonymous, level 10 being least anonymous)',
+        'write': 'Update Player\'s Reputation',
     },
 }
 
@@ -94,7 +104,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'auth_server.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -107,6 +116,11 @@ DATABASES = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 PKCE_REQUIRED = False
+# OAUTH2_PROVIDER_ACCESS_TOKEN_MODEL = 'oauth.AccessToken'
+# OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = 'oauth.RefreshToken'
+# OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth.Application'
+# OAUTH2_PROVIDER_GRANT_MODEL = 'oauth.Grant'
+# OAUTH2_PROVIDER_ID_TOKEN_MODEL = 'oauth.IDToken'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -126,7 +140,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -139,7 +152,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
