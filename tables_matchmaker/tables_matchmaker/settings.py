@@ -15,18 +15,16 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bj&%1g@fqs#b@x#986d!l(y2zuh+xkokmywl$(6#rjpp30=xm+'
+SECRET_KEY = 'django-insecure-h!0f=d4sbhifl+xl@dt$)v7my+7lzq_j$i0a(vg#s+$xfo4g#i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,9 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_api',
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,7 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tables_matchmaker.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -79,7 +81,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -99,7 +100,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -111,11 +111,21 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# # HEROKU CONSULER CREDENTIALS
+# CLIENT_ID = '7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R'
+# CLIENT_SECRET = 'MSbi0l3apzI5DHtFNEBdntkmzccAb7vO2ZANej2irDEiaTUfEvAb1VBUrfYUaghf5TKNypl5zU69a2EcyVUGil10Utq8qtkjFJyH47KsjnJDSEFQo971ZgWPEbRzjBd1'
+
+CLIENT_ID = 'DwL0GjZmLAn4PL74KcFBLDnHeRdsF15nIb5HR95d'
+CLIENT_SECRET = 'DbHThFGcJhy0rKUT8mTKamfCBqBpdTtBoxK8rZkCoTBx2fAT0QHDHh8SFZIU5OvwB4pxaztq1RqWIY64Z1e39RYtasFa0Ytm1VZficG3GJe3rikOftjEiVVm5yH08alX'
+
+CORS_ORIGIN_ALLOW_ALL = True
+URL_AUTHORIZE = f'http://localhost:8000/o/authorize?state=random_state_string&response_type=code&client_id={CLIENT_ID}'
+URL_CALLBACK = f'http://localhost:8003/in_game'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

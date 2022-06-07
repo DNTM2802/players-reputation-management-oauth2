@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from ..forms import *
 from django.contrib.auth import login
 from django.contrib import messages
+from django.template.response import TemplateResponse
 
 
 def register_view(request):
@@ -44,7 +45,8 @@ def login_view(request):
         else:
             messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
-    return render(request=request, template_name="login.html", context={"login_form": form})
+
+    return TemplateResponse(request, 'login.html', {"login_form": form})
 
 
 def logout_view(request):
