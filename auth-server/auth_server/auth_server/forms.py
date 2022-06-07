@@ -4,12 +4,14 @@ from django.contrib.auth.models import User
 
 
 # Create your forms here.
+from accounts.models import Player
+
 
 class NewUserForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
-        model = User
+        model = Player
         fields = ("username", "email", "password1", "password2")
 
     def save(self, commit=True):

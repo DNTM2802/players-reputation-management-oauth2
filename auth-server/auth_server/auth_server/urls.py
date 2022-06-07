@@ -24,4 +24,5 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('accounts/login/', login_view, name='login'),
     path('register/', register_view, name='register'),
+    path('api/reputation', rw_reputation, name='rw_reputation'), # Protected resource
 ]
