@@ -117,17 +117,25 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # # HEROKU CONSULER CREDENTIALS
-# CLIENT_ID = '7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R'
-# CLIENT_SECRET = 'MSbi0l3apzI5DHtFNEBdntkmzccAb7vO2ZANej2irDEiaTUfEvAb1VBUrfYUaghf5TKNypl5zU69a2EcyVUGil10Utq8qtkjFJyH47KsjnJDSEFQo971ZgWPEbRzjBd1'
+CLIENT_ID = '7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R'
+CLIENT_SECRET = 'MSbi0l3apzI5DHtFNEBdntkmzccAb7vO2ZANej2irDEiaTUfEvAb1VBUrfYUaghf5TKNypl5zU69a2EcyVUGil10Utq8qtkjFJyH47KsjnJDSEFQo971ZgWPEbRzjBd1'
 
-CLIENT_ID = 'DwL0GjZmLAn4PL74KcFBLDnHeRdsF15nIb5HR95d'
-CLIENT_SECRET = 'DbHThFGcJhy0rKUT8mTKamfCBqBpdTtBoxK8rZkCoTBx2fAT0QHDHh8SFZIU5OvwB4pxaztq1RqWIY64Z1e39RYtasFa0Ytm1VZficG3GJe3rikOftjEiVVm5yH08alX'
+# CLIENT_ID = 'DwL0GjZmLAn4PL74KcFBLDnHeRdsF15nIb5HR95d'
+# CLIENT_SECRET = 'DbHThFGcJhy0rKUT8mTKamfCBqBpdTtBoxK8rZkCoTBx2fAT0QHDHh8SFZIU5OvwB4pxaztq1RqWIY64Z1e39RYtasFa0Ytm1VZficG3GJe3rikOftjEiVVm5yH08alX'
 
 CORS_ORIGIN_ALLOW_ALL = True
-URL_AUTHORIZE = f'http://localhost:8000/o/authorize?state=random_state_string&response_type=code&client_id={CLIENT_ID}'
-URL_CALLBACK = f'http://localhost:8003/in_game'
-
+URL_AUTHORIZE = f'http://localhost:8000/o/authorize?response_type=code&client_id={CLIENT_ID}&state=random_state_string'
+# URL_CALLBACK = f'http://localhost:8003/in_game'
+URL_AUTH_GRANT = f'http://localhost:8000/'
+URL_TOKEN = f'http://localhost:8000/o/token/'
+URL_REPUTATION = f'http://localhost:8000/api/reputation'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_NAME = "TMSESSIONS"
+
+GAMES = {'chess': 2, 'monopoly': 3, 'poker': 4, 'uno':5}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

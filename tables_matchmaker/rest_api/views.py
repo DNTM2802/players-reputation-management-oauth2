@@ -1,18 +1,43 @@
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 import requests
-
 from tables_matchmaker import settings
 
 
 @api_view(['GET'])
 def play_game(request):
+    """Redirects to authorization server.
+
+    Args:
+        game: the game the player intends to queue up to play.
+        skill: skill preference of the player's opponent.
+        behaviour: behaviour preference of the player's opponent.
+        granularity: dilution of the reputation (2 (most diluted) -> 10 (least diluted))
+
+    Returns:
+        400: if the request is not GET.
+        401: if the arguments are not present in the request.
+        redirect: if all is correct redirects to authorization server sending over only granularity
+    """
+
     if request.method == "GET":
-        typegame = request.GET.get("game", None)
-        return HttpResponse(settings.URL_AUTHORIZE)
+        game = request.GET.get("game", None)
+        skill = request.GET.get("skill", None)
+        behaviour = request.GET.get("behaviour", None)
+        granularity = request.GET.get("granularity", None)
+
+        if not (game and skill and behaviour and granularity):
+            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+
+        request.session['game'] = game
+        request.session['skill'] = skill
+        request.session['behaviour'] = behaviour
+        request.session['granularity'] = granularity
+        request.session.save()
+        request.session.modified = True
+        return HttpResponseRedirect(redirect_to=settings.URL_AUTHORIZE + f'&scope=read_{granularity}%20write')
+
     else:
         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
@@ -20,17 +45,32 @@ def play_game(request):
 @api_view(['GET'])
 def exchange(request):
     if request.method == "GET":
-        auth_code = request.GET.get("code", None)
+        code = request.GET.get("code", None)
         client_id = settings.CLIENT_ID
         client_secret = settings.CLIENT_SECRET
 
-        url = 'https://www.w3schools.com/python/demopage.php'
-        myobj = {'somekey': 'somevalue'}
+        token = requests.post(settings.URL_TOKEN,
+                              data={"client_id": client_id, "client_secret": client_secret,
+                                    "grant_type": "authorization_code",
+                                    "code": code})
 
-        x = requests.post(url, data=myobj)
-        print(x)
-        # return HttpResponse(status=status.HTTP_200_OK)
-        return HttpResponseRedirect(redirect_to='http://google.com/')
+        token = token.json()['access_token']
+        print(token)
+        reputation = requests.get(settings.URL_REPUTATION, headers={'Authorization': 'Bearer ' + token})
+        print(reputation.json())
+        return HttpResponseRedirect(redirect_to="http://localhost:8003")
+
+        # for key, value in request.session.items():
+        #     print(' >>>>> {} => {}'.format(key, value))
+        #
+        # if request.session.has_key('game') & request.session.has_key('granularity'):
+        #     game = request.session['game']
+        #     granularity = request.session['granularity']
+        #     return HttpResponseRedirect(redirect_to='www.google.com')
+        # else:
+        #     return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+        #
+        # return HttpResponseRedirect(redirect_to='http://localhost:8003/')
 
     else:
-        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
