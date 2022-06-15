@@ -1,6 +1,7 @@
 oauth2_db/data/*
 .idea/
 old/
+data.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
