@@ -1,8 +1,13 @@
+import daphne.cli
+import self as self
 from django.http import HttpResponseRedirect, HttpResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
 import requests
 from tables_matchmaker import settings
+from logger import Logger
+
+l = Logger()
 
 
 @api_view(['GET'])
@@ -31,9 +36,10 @@ def play_game(request):
             return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
 
         request.session['game'] = game
-        request.session['skill'] = skill
-        request.session['behaviour'] = behaviour
-        request.session['granularity'] = granularity
+
+        request.session['skill_preference'] = skill
+        request.session['behaviour_preference'] = behaviour
+        request.session['granularity_preference'] = granularity
         request.session.save()
         request.session.modified = True
         return HttpResponseRedirect(redirect_to=settings.URL_AUTHORIZE + f'&scope=read_{granularity}%20write')
@@ -55,22 +61,22 @@ def exchange(request):
                                     "code": code})
 
         token = token.json()['access_token']
-        print(token)
+
         reputation = requests.get(settings.URL_REPUTATION, headers={'Authorization': 'Bearer ' + token})
-        print(reputation.json())
-        return HttpResponseRedirect(redirect_to="http://localhost:8003")
+
+        reputation = reputation.json()
+
+        request.session['skill'] = reputation['skill']
+        request.session['behaviour'] = reputation['behaviour']
+
+        response = HttpResponseRedirect(
+            redirect_to=f"http://localhost:8002/matchmake")
+        response.set_cookie('player_id', request.session.session_key)
+
+        return response
 
         # for key, value in request.session.items():
         #     print(' >>>>> {} => {}'.format(key, value))
-        #
-        # if request.session.has_key('game') & request.session.has_key('granularity'):
-        #     game = request.session['game']
-        #     granularity = request.session['granularity']
-        #     return HttpResponseRedirect(redirect_to='www.google.com')
-        # else:
-        #     return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
-        #
-        # return HttpResponseRedirect(redirect_to='http://localhost:8003/')
 
     else:
         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
