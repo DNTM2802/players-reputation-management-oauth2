@@ -5,6 +5,7 @@ from auth_server.views.mvt.protected.views import profile_view, logout_view, cha
 from auth_server.views.mvt.public.views import login_view, login_cmd_view, login_cmd_callback_view, register_cmd_view, \
     register_cmd_callback_view, register_credentials_view
 from auth_server.views.rest.protected.views import rw_reputation
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('', profile_view, name='profile'),
@@ -20,4 +21,4 @@ urlpatterns = [
     path('register_cmd_callback/', register_cmd_callback_view, name='register_cmd_callback'),
     path('register_credentials/', register_credentials_view, name='register_credentials'),
     path('api/reputation', rw_reputation, name='rw_reputation'), # Protected resource
-]
+] + staticfiles_urlpatterns()
