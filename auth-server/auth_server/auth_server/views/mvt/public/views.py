@@ -13,7 +13,10 @@ from auth_server.forms import *
 
 # Utils
 from auth_server.utils.utils import retrieve_and_transform_resource
+import os
 
+os.environ.setdefault('AUTH_SERVER_CMD_CALLBACK_WEB_ADDRESS', '127.0.0.1')
+os.environ.setdefault('AUTH_SERVER_CMD_CALLBACK_WEB_PORT', '8000')
 
 def register_cmd_view(request):
     """
@@ -25,8 +28,8 @@ def register_cmd_view(request):
     :return: HttpResponseRedirect to external IdP
     """
     if request.method == "GET":
-        return HttpResponseRedirect(
-            redirect_to='https://preprod.autenticacao.gov.pt/oauth/askauthorization?redirect_uri=http://127.0.0.1:8000/register_cmd_callback&client_id=9113170755799990166&scope=http://interop.gov.pt/MDC/Cidadao/NIC&response_type=token')
+        redirect_to = f"https://preprod.autenticacao.gov.pt/oauth/askauthorization?redirect_uri=http://{os.environ.get('AUTH_SERVER_CMD_CALLBACK_WEB_ADDRESS')}:{os.environ.get('AUTH_SERVER_CMD_CALLBACK_WEB_PORT')}/register_cmd_callback&client_id=9113170755799990166&scope=http://interop.gov.pt/MDC/Cidadao/NIC&response_type=token"
+        return HttpResponseRedirect(redirect_to=redirect_to)
 
 
 def register_cmd_callback_view(request):
@@ -171,8 +174,8 @@ def login_cmd_view(request):
     :return: HttpResponseRedirect to external IdP
     """
     if request.method == "GET":
-        return HttpResponseRedirect(
-            redirect_to='https://preprod.autenticacao.gov.pt/oauth/askauthorization?redirect_uri=http://127.0.0.1:8000/accounts/login_cmd_callback&client_id=9113170755799990166&scope=http://interop.gov.pt/MDC/Cidadao/NIC&response_type=token')
+        redirect_to = f"https://preprod.autenticacao.gov.pt/oauth/askauthorization?redirect_uri=http://{os.environ.get('AUTH_SERVER_CMD_CALLBACK_WEB_ADDRESS')}:{os.environ.get('AUTH_SERVER_CMD_CALLBACK_WEB_PORT')}/accounts/login_cmd_callback&client_id=9113170755799990166&scope=http://interop.gov.pt/MDC/Cidadao/NIC&response_type=token"
+        return HttpResponseRedirect(redirect_to=redirect_to)
 
 
 def login_cmd_callback_view(request):
