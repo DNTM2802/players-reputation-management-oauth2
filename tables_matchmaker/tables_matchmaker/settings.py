@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_api',
     'corsheaders',
-
+    'channels',
+    'matchmaker',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'tables_matchmaker.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -114,7 +115,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # # HEROKU CONSULER CREDENTIALS
 CLIENT_ID = '7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R'
@@ -136,6 +141,18 @@ SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_NAME = "TMSESSIONS"
 
-GAMES = {'chess': 2, 'monopoly': 3, 'poker': 4, 'uno':5}
+GAMES = {'chess': 2, 'monopoly': 3, 'poker': 4, 'uno': 5}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ASGI_APPLICATION = 'tables_matchmaker.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
