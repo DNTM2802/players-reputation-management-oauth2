@@ -2,7 +2,7 @@ import json
 from random import randint
 import os
 
-os.environ.setdefault('TM_APPLICATION_CLIEND_ID', '7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R')
+os.environ.setdefault('TM_APPLICATION_CLIENT_ID', '7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R')
 os.environ.setdefault('TM_APPLICATION_CLIENT_SECRET',
                       'MSbi0l3apzI5DHtFNEBdntkmzccAb7vO2ZANej2irDEiaTUfEvAb1VBUrfYUaghf5TKNypl5zU69a2EcyVUGil10Utq8qtkjFJyH47KsjnJDSEFQo971ZgWPEbRzjBd1')
 os.environ.setdefault('TM_APPLICATION_REDIRECT_URI', 'http://0.0.0.0:8001/exchange')
@@ -72,7 +72,7 @@ template["fields"]["behaviour"] = 0
 template["fields"]["auth_status"] = "NULL"
 final_list.append(template)
 
-f = open("fixtures/player.json", "w")
+f = open("code/fixtures/player.json", "w")
 f.write(json.dumps(final_list, indent=4))
 f.close()
 
@@ -82,21 +82,21 @@ data_to_txt += "## OAUTH2 APPLICATIONS ##\n\n"
 final_list = []
 template = json.loads(
     '{"model":"oauth2_provider.application","pk":1,"fields":{"client_id":"","user":0,"redirect_uris":"","client_type":"confidential","authorization_grant_type":"authorization-code","client_secret":"","name":"Tables\' Manager","skip_authorization":false,"created":"2022-06-15T17:15:59.817Z","updated":"2022-06-15T17:15:59.817Z","algorithm":""}}')
-template["fields"]["client_id"] = os.environ.get('TM_APPLICATION_CLIEND_ID')
+template["fields"]["client_id"] = os.environ.get('TM_APPLICATION_CLIENT_ID')
 template["fields"]["client_secret"] = os.environ.get('TM_APPLICATION_CLIENT_SECRET')
 template["fields"]["redirect_uris"] = os.environ.get('TM_APPLICATION_REDIRECT_URI')
 final_list.append(template)
 
-f = open("fixtures/application.json", "w")
+f = open("code/fixtures/application.json", "w")
 f.write(json.dumps(final_list, indent=4))
 f.close()
 
 data_to_txt += "name: Tables\' Manager\n"
-data_to_txt += f"client_id: {os.environ.get('TM_APPLICATION_CLIEND_ID')}\n"
+data_to_txt += f"client_id: {os.environ.get('TM_APPLICATION_CLIENT_ID')}\n"
 data_to_txt += f"client_secret: {os.environ.get('TM_APPLICATION_CLIENT_SECRET')}\n"
 data_to_txt += f"redirect_uris: {os.environ.get('TM_APPLICATION_REDIRECT_URI')}\n"
 
-f = open("data.txt", "w")
+f = open("code/data.txt", "w")
 f.write(data_to_txt)
 f.close()
 
