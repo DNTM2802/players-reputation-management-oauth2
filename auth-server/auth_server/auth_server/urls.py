@@ -1,28 +1,23 @@
-"""auth_server URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
-from .views.views import *
+from auth_server.views import *
+from auth_server.views.mvt.protected.views import profile_view, logout_view, change_password_view
+from auth_server.views.mvt.public.views import login_view, login_cmd_view, login_cmd_callback_view, register_cmd_view, \
+    register_cmd_callback_view, register_credentials_view
+from auth_server.views.rest.protected.views import rw_reputation
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', profile_view, name='profile'),
+    #path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     path("o/", include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('logout/', logout_view, name='logout'),
     path('accounts/login/', login_view, name='login'),
-    path('register/', register_view, name='register'),
+    path('accounts/login_cmd/', login_cmd_view, name='login_cmd'),
+    path('accounts/login_cmd_callback/', login_cmd_callback_view, name='login_cmd_callback'),
+    path('accounts/change_password/', change_password_view, name='change_password'),
+    path('register/', register_cmd_view, name='register'),
+    path('register_cmd_callback/', register_cmd_callback_view, name='register_cmd_callback'),
+    path('register_credentials/', register_credentials_view, name='register_credentials'),
     path('api/reputation', rw_reputation, name='rw_reputation'), # Protected resource
 ]
