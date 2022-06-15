@@ -47,6 +47,9 @@ def change_password_view(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
+            # Update authentication status
+            user.auth_status = Player.AUTH_STATUS.CMD
+            user.save()
             messages.success(request,
                              'Your password was successfully updated!',
                              extra_tags='alert-success')
