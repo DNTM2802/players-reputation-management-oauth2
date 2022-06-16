@@ -1,25 +1,21 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, logout
+from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import login
-from django.contrib import messages
 from django.template.response import TemplateResponse
-
+from django.views.decorators.csrf import csrf_exempt
+# OAuth2
+from oauth2_provider.decorators import protected_resource
+from oauth2_provider.models import AccessToken
 # Rest Framework
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-# OAuth2
-from oauth2_provider.decorators import protected_resource
-from oauth2_provider.models import AccessToken
-
 # Forms
 from ..forms import *
-
 # Serializers
 from ..serializers.serializers import playerReputationSerializer
-
 # Utils
 from ..utils.utils import pop_scopes
 
@@ -123,10 +119,11 @@ def rw_reputation(request):
         # Check if body is JSON with reputation update
         if all(k in request.data for k in ('skill_update', 'behaviour_update')):
             try:
-                player.skill += request.data['skill_update']
-                player.behaviour += request.data['behaviour_update']
+                player.skill += int(request.data['skill_update'])
+                player.behaviour += int(request.data['behaviour_update'])
                 player.save()
             except Exception as e:
+                print(e)
                 return Response({'detail': 'Could not update player\'s reputation.'}, status=500)
             return Response({'detail': 'Reputation updated.'}, status=200)
         else:
