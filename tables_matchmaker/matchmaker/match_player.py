@@ -26,8 +26,11 @@ def match_player(player) -> str:
             if check_existence_of_opponents(room) and check_player_fitness(player, room):
                 # l.log(f"Great! We found a match!")
                 room.player_set.add(player)  # add the player to the matched room with other players
-                room.match_ready = True
                 room.save()
+
+                room.match_ready = True if room.is_full else False
+                room.save()
+
                 return room
             else:
                 continue
