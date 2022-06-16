@@ -56,7 +56,7 @@
             }
         </style>
     </head>
-    <body>
+    <body onload="clearCookies()">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">User Agent</a>
         <button
@@ -76,7 +76,7 @@
             <form method="post">
                 <img src="/static/img/games/chess.png" class="card-img-top" alt=""/>
                 <div class="card-body">
-                    <h5 class="card-title">Chess</h5>
+                    <h5 class="card-title">Chess (2 players)</h5>
                     <div class="form-group">
                         <label for="skill">Skill</label>
                         <select name="skill" id="skill" class="form-select">
@@ -120,48 +120,127 @@
 
         </div>
 
-        <div class="col-md-4 card">
-            <img src="/static/img/games/checkers.png" class="card-img-top" alt=""/>
-            <div class="card-body">
-                <h5 class="card-title">Checkers</h5>
-                <a class="btn btn-primary btn-play" value="checkers">Play!</a>
-            </div>
-        </div>
 
         <div class="col-md-4 card">
-            <img src="/static/img/games/monopoly.png" class="card-img-top" alt=""/>
-            <div class="card-body">
-                <h5 class="card-title">Monopoly</h5>
-                <a class="btn btn-primary btn-play" value="monopoly">Play!</a>
-            </div>
+            <form method="post">
+                <img src="/static/img/games/monopoly.png" class="card-img-top" alt=""/>
+                <div class="card-body">
+                    <h5 class="card-title">Monopoly (3 players)</h5>
+                    <div class="form-group">
+                        <label for="skill">Skill</label>
+                        <select name="skill" id="skill" class="form-select">
+                            <option value="l"><</option>
+                            <option value="le"><=</option>
+                            <option value="eq" selected>==</option>
+                            <option value="eg">=></option>
+                            <option value="g">></option>
+                            <option value="any">any</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="behaviour">Behaviour</label>
+                        <select name="behaviour" id="behaviour" class="form-select">
+                            <option value="l"><</option>
+                            <option value="le="><=</option>
+                            <option value="eq" selected>==</option>
+                            <option value="eg">=></option>
+                            <option value="g">></option>
+                            <option value="any">any</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="granularity">Granularity</label>
+                        <select name="granularity" id="granularity" class="form-select">
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-play" name="game" value="monopoly">Play</button>
+
+                </div>
+            </form>
         </div>
 
-        <div class="col-md-4 card">
-            <img src="/static/img/games/poker.png" class="card-img-top" alt=""/>
-            <div class="card-body">
-                <h5 class="card-title">Poker</h5>
-                <a class="btn btn-primary btn-play">Play!</a>
-            </div>
-        </div>
 
         <div class="col-md-4 card">
-            <img src="/static/img/games/sueca.png" class="card-img-top" alt=""/>
-            <div class="card-body">
-                <h5 class="card-title">Sueca</h5>
-                <a class="btn btn-primary btn-play">Play!</a>
-            </div>
+            <form method="post">
+                <img src="/static/img/games/sueca.png" class="card-img-top" alt=""/>
+                <div class="card-body">
+                    <h5 class="card-title">Peixinho (4 players)</h5>
+                    <div class="form-group">
+                        <label for="skill">Skill</label>
+                        <select name="skill" id="skill" class="form-select">
+                            <option value="l"><</option>
+                            <option value="le"><=</option>
+                            <option value="eq" selected>==</option>
+                            <option value="eg">=></option>
+                            <option value="g">></option>
+                            <option value="any">any</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="behaviour">Behaviour</label>
+                        <select name="behaviour" id="behaviour" class="form-select">
+                            <option value="l"><</option>
+                            <option value="le="><=</option>
+                            <option value="eq" selected>==</option>
+                            <option value="eg">=></option>
+                            <option value="g">></option>
+                            <option value="any">any</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="granularity">Granularity</label>
+                        <select name="granularity" id="granularity" class="form-select">
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-play" name="game" value="peixinho">Play</button>
+
+                </div>
+            </form>
         </div>
 
-        <div class="col-md-4 card">
-            <img src="/static/img/games/uno.png" class="card-img-top" alt=""/>
-            <div class="card-body">
-                <h5 class="card-title">UNO</h5>
-                <a class="btn btn-primary btn-play">Play!</a>
-            </div>
-        </div>
+
     </div>
 
+    <script>
 
+        function clearCookies() {
+            var cookies = document.cookie.split("; ");
+            for (var c = 0; c < cookies.length; c++) {
+                var d = window.location.hostname.split(".");
+                while (d.length > 0) {
+                    var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+                    var p = location.pathname.split('/');
+                    document.cookie = cookieBase + '/';
+                    while (p.length > 0) {
+                        document.cookie = cookieBase + p.join('/');
+                        p.pop();
+                    }
+                    ;
+                    d.shift();
+                }
+            }
+
+        }
+
+    </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
