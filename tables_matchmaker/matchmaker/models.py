@@ -29,7 +29,8 @@ class Room(models.Model):
         return self.player_set.all().count() == self.game.max_num_players
 
     def __str__(self):
-        return self.id + " " + self.game
+        return self.id + " " + self.game.name
+
 
 
 class Player(models.Model):
@@ -41,6 +42,9 @@ class Player(models.Model):
     granularity_preference = models.IntegerField()
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
     game = models.CharField(max_length=50)
+    is_winner = models.IntegerField(default=0)
+    is_cheater = models.IntegerField(default=1) # 1 is not cheater, -2 is cheater
 
     def __str__(self):
         return f'room_id {self.room}| player_id {self.player_id}| game {self.game} | skill {self.skill}| behaviour {self.behaviour}| skill_preference {self.skill_preference}| behaviour_preference {self.behaviour_preference}| granularity_preference {self.granularity_preference}'
+
