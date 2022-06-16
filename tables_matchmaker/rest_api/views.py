@@ -1,11 +1,11 @@
-import daphne.cli
-import self as self
+import requests
+from django.contrib.sessions.backends.db import SessionStore
 from django.http import HttpResponseRedirect, HttpResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
-import requests
-from tables_matchmaker import settings
+
 from logger import Logger
+from tables_matchmaker import settings
 
 l = Logger()
 
@@ -61,6 +61,7 @@ def exchange(request):
                                     "code": code})
 
         token = token.json()['access_token']
+        request.session['access_token'] = token
 
         reputation = requests.get(settings.URL_REPUTATION, headers={'Authorization': 'Bearer ' + token})
 
