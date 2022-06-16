@@ -45,15 +45,6 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
-
-            .btn-play {
-                width: 100%;
-            %
-            }
-
-            .card-img-top {
-                padding: 10%;
-            }
         </style>
     </head>
     <body>
@@ -81,7 +72,12 @@
                 <h5 class="card-title">current num players <span id="current_num_players"></span></h5>
                 <h5 class="card-title">roomid {{ room.id }}</h5>
                 <h5 id="match_status">NO MATCH</h5>
-                <button id="game_results" type="button" class="btn btn-danger" style="display:none">PLAY</button>
+                <form action="{% url 'game' %}?room_id={{ room.id }}" method="POST">
+                    {% csrf_token %}
+
+                    <button id="game_results" type="button submit" class="btn btn-danger" style="display:none">PLAY
+                    </button>
+                </form>
 
             </div>
         </div>
@@ -123,8 +119,14 @@
                     + '/'
                 );
 
+                $('#game_results').click(function () {
+                    chatSocket.send(JSON.stringify({
+                        'message': 'results-incoming'
+                    }));
+                });
+
                 chatSocket.onopen = function (e) {
-                    // asda
+                    // nothing
                 };
 
                 chatSocket.onmessage = function (e) {
@@ -153,6 +155,9 @@
                         }));
                     } else if (message['message-type'] == 'update-room-match-status') {
                         $('#match_status').text(message['message-body']);
+                    } else if (message['message-type'] == 'results-incoming') {
+                        window.location = "http://localhost:8002/game/?room_id=" + room_id;
+
                     } else if (message['message-type'] == 'update-current-num-players') {
                         $('#current_num_players').text(message['message-body']);
                         // room is now full and can proceed to play
@@ -169,15 +174,6 @@
                 };
             }
         );
-
-        $('#game_results').click(function () {
-            $.ajax({
-                url: "/game/" + "{{ room.id }}",
-                success: function (json) {
-                    console.log("requested access complete");
-                }
-            });
-        });
 
 
     </script>
