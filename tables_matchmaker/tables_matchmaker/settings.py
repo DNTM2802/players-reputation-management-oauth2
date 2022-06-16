@@ -134,6 +134,8 @@ URL_AUTHORIZE = f'http://localhost:8000/o/authorize?response_type=code&client_id
 URL_AUTH_GRANT = f'http://localhost:8000/'
 URL_TOKEN = f'http://localhost:8000/o/token/'
 URL_REPUTATION = f'http://localhost:8000/api/reputation'
+URL_USER_AGENT = f'http://localhost:8003'
+URL_TM = f'http://localhost:8002'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -155,4 +157,3 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
