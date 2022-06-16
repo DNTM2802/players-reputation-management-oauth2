@@ -84,8 +84,22 @@ class Consumer(AsyncWebsocketConsumer):
                     'message': current_num_players
                 }
             )
+        elif self.received_data['message'] == 'results-incoming' and len(self.received_data) == 1:
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'results_incoming',
+                    'message': 'cool beans'
+                }
+            )
         else:
             pass
+
+    async def results_incoming(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps({
+            'message': {'message-type': 'results-incoming'}
+        }))
 
     # CURRENT NUM PLAYERS UPDATES
     def get_current_num_players(self):
