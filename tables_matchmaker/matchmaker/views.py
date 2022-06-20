@@ -79,10 +79,6 @@ def matchmake(request):
 
 
 def match_manager(request):
-    l.log(request.url)
-    l.log(request.body)
-    l.log(request.headers)
-
     if request.method == "POST":
         try:
             room_id = request.GET.get('room_id', None)
@@ -130,10 +126,17 @@ def match_manager(request):
 
             access_token = player_session['access_token']
 
-            update_reputations = requests.post(settings.URL_REPUTATION, data={"skill_update": player_values['is_winner'],
-                                                                              "behaviour_update": player_values[
-                                                                                  'is_cheater']},
+            update_reputations = requests.post(settings.URL_REPUTATION,
+                                               data={"skill_update": player_values['is_winner'],
+                                                     "behaviour_update": player_values[
+                                                         'is_cheater']},
                                                headers={'Authorization': 'Bearer ' + access_token})
+            if update_reputations.status_code != 200:
+                # TODO: Error message??
+                return redirect(settings.URL_USER_AGENT)
+
+            # Remove session
+            player_session.flush()
 
         return render(request, 'matchmaker/results.html', {
             'room': room,
