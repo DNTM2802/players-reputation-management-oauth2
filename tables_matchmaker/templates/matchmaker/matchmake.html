@@ -68,7 +68,7 @@
         <div class="col-md-4 card">
             <div class="card-body">
                 <h5 class="card-title">game {{ room.game }}</h5>
-                <h5 class="card-title">max num players {{ room.game.max_num_players }}</h5>
+                <h5 class="card-title">max num players {{ room.game.num_players }}</h5>
                 <h5 class="card-title">current num players <span id="current_num_players"></span></h5>
                 <h5 class="card-title">roomid {{ room.id }}</h5>
                 <h5 id="match_status">NO MATCH</h5>
@@ -161,7 +161,7 @@
                     } else if (message['message-type'] == 'update-current-num-players') {
                         $('#current_num_players').text(message['message-body']);
                         // room is now full and can proceed to play
-                        if (message['message-body'] == {{ room.game.max_num_players }}) {
+                        if (message['message-body'] == {{ room.game.num_players }}) {
                             $('#game_results').show();
 
                         }

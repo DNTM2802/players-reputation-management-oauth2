@@ -4,15 +4,13 @@ from django.db import models
 # Create your models here.
 class Game(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    max_num_players = models.IntegerField()
+    num_players = models.IntegerField()
 
     def __str__(self):
         return self.name
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and self.name == other.name
-
-    # Create your models here.
 
 
 class Room(models.Model):
@@ -26,7 +24,7 @@ class Room(models.Model):
 
     @property
     def is_full(self):
-        return self.player_set.all().count() == self.game.max_num_players
+        return self.player_set.all().count() == self.game.num_players
 
     def __str__(self):
         return self.id + " " + self.game.name

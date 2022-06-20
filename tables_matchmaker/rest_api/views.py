@@ -1,5 +1,4 @@
 import requests
-from django.contrib.sessions.backends.db import SessionStore
 from django.http import HttpResponseRedirect, HttpResponse
 from rest_framework import status
 from rest_framework.decorators import api_view

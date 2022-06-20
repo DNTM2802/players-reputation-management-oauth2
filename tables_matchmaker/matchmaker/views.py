@@ -79,6 +79,10 @@ def matchmake(request):
 
 
 def match_manager(request):
+    l.log(request.url)
+    l.log(request.body)
+    l.log(request.headers)
+
     if request.method == "POST":
         try:
             room_id = request.GET.get('room_id', None)
