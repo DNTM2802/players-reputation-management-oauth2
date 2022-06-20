@@ -12,6 +12,7 @@ def playerReputationSerializer(player, popped_scopes):
     :param popped_scopes: carries read_N scope
     :return: Dictionary with anonymized skill and behaviour
     """
+
     # Get protected attributes
     player_skill = player.skill
     player_behaviour = player.behaviour
@@ -35,3 +36,23 @@ def playerReputationSerializer(player, popped_scopes):
     rank_behaviour = math.ceil((rank_behaviour * n_of_bins) / total_players)
 
     return {'skill': f"{rank_skill}/{n_of_bins}", 'behaviour': f"{rank_behaviour}/{n_of_bins}"}
+
+
+def playerProfileSerializer(player):
+    """
+    Retrieves raw (not anonymized) reputation parameters of a player in order
+    to render that player's reputation profile.
+
+    :param player: player model
+    :return: Tuple containing raw (not anonymized) reputation parameters and
+    total number of registered players
+    """
+
+    # Retrieve player ranks
+    rank_skill = Player.objects.filter(skill__gt=player.skill).count() + 1
+    rank_behaviour = Player.objects.filter(behaviour__gt=player.behaviour).count() + 1
+
+    # Retrieve total number of players
+    total_players = Player.objects.filter(is_superuser=0).count()
+
+    return rank_skill, rank_behaviour, total_players

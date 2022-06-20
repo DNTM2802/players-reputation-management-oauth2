@@ -1,10 +1,9 @@
-from django.contrib import messages
-from django.contrib.auth import authenticate, logout
-from django.contrib.auth import login
-from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render, redirect
-from django.template.response import TemplateResponse
 from django.views.decorators.csrf import csrf_exempt
+
+# Rest Framework
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 # OAuth2
 from oauth2_provider.decorators import protected_resource
 from oauth2_provider.models import AccessToken
@@ -12,64 +11,12 @@ from oauth2_provider.models import AccessToken
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-# Forms
-from ..forms import *
 # Serializers
-from ..serializers.serializers import playerReputationSerializer
+from auth_server.serializers.serializers import playerReputationSerializer
+
 # Utils
-from ..utils.utils import pop_scopes
+from auth_server.utils.utils import pop_scopes
 
-
-# HTML views
-
-def register_view(request):
-    if request.method == "POST":
-        form = NewUserForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, "Registration successful.")
-            return redirect("home")
-        messages.error(request, "Unsuccessful registration. Invalid information.")
-    form = NewUserForm()
-    return render(request=request, template_name="register.html", context={"register_form": form})
-
-
-def home(request):
-    return render(request=request, template_name="index.html")
-
-
-def login_view(request):
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.info(request, f"You are now logged in as {username}.")
-                next_hop = request.GET.get("next", None)
-                if next_hop:
-                    return redirect(next_hop)
-                else:
-                    return redirect("home")
-            else:
-                messages.error(request, "Invalid username or password.")
-        else:
-            messages.error(request, "Invalid username or password.")
-    form = AuthenticationForm()
-
-    return TemplateResponse(request, 'login.html', {"login_form": form})
-
-
-def logout_view(request):
-    logout(request)
-    messages.info(request, "You have successfully logged out.")
-    return redirect("home")
-
-
-# REST Views
 
 @api_view(('GET', 'POST',))  # Only POST and GET allowed
 @protected_resource()  # An access token (not expired) is required
