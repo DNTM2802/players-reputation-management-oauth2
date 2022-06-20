@@ -1,10 +1,7 @@
-from ast import UAdd
-from email import header
-from http import cookies
-import json
-from xml.sax.handler import property_interning_dict
-from django.shortcuts import redirect
 import requests
+from requests_html import HTMLSession
+import asyncio
+from websockets import connect
 
 client = requests.session()
 
@@ -32,7 +29,6 @@ params = {
     'state': 'random_state_string',
     'scope': 'read_2 write',
 }
-
 
 TM = "http://localhost:8002"
 
@@ -71,8 +67,6 @@ client_id = "7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R"
 state = "random_state_string"
 response_type = "code"
 
-
-
 data = {
     "csrfmiddlewaretoken": f"{authorize_form_csrftoken}",
     "redirect_uri": f"{redirect_uri}",
@@ -87,9 +81,8 @@ data = {
     "allow": "Authorize",
 }
 
-
 browser_csrftoken = login.cookies.items()[0][1]
-print()
+
 sessionid_cookie = login.request.headers["Cookie"].split("sessionid=")[-1]
 messages_cookie = login.request.headers["Cookie"].split("messages=")[1].split(";")[0]
 
@@ -100,12 +93,24 @@ cookies = {
     "TMSESSIONS": playgame.request.headers["Cookie"].split("TMSESSIONS=")[1]
 }
 
-
 ## SUBMITS AUTHORIZE PAGE FORM
 
 response = client.post('http://localhost:8000/o/authorize/', headers=headers, params=params, data=data, cookies=cookies)
 
-
+## response has room
 response = client.get(response.url)
-print(response.text)
 
+html_sess = HTMLSession()
+resp = html_sess.get(response.url)
+
+# resp.html.find('#myElementID').text
+
+roomid = response.url[-6]
+
+
+async def connect(uri):
+    async with connect(uri) as websocket:
+        await websocket.recv()
+
+
+asyncio.run(connect(f"ws://localhost:8002/ws/matchmaker/{roomid}"))
