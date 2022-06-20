@@ -72,7 +72,11 @@ template["fields"]["behaviour"] = 0
 template["fields"]["auth_status"] = "NULL"
 final_list.append(template)
 
-f = open("code/fixtures/player.json", "w")
+data_to_txt += f"username: admin\n"
+data_to_txt += f"nic: None\n"
+data_to_txt += f"password: Cda77Hg26ABsKy7K\n\n"
+
+f = open("fixtures/player.json", "w")
 f.write(json.dumps(final_list, indent=4))
 f.close()
 
@@ -87,7 +91,7 @@ template["fields"]["client_secret"] = os.environ.get('TM_APPLICATION_CLIENT_SECR
 template["fields"]["redirect_uris"] = os.environ.get('TM_APPLICATION_REDIRECT_URI')
 final_list.append(template)
 
-f = open("code/fixtures/application.json", "w")
+f = open("fixtures/application.json", "w")
 f.write(json.dumps(final_list, indent=4))
 f.close()
 
@@ -96,7 +100,7 @@ data_to_txt += f"client_id: {os.environ.get('TM_APPLICATION_CLIENT_ID')}\n"
 data_to_txt += f"client_secret: {os.environ.get('TM_APPLICATION_CLIENT_SECRET')}\n"
 data_to_txt += f"redirect_uris: {os.environ.get('TM_APPLICATION_REDIRECT_URI')}\n"
 
-f = open("code/data.txt", "w")
+f = open("data.txt", "w")
 f.write(data_to_txt)
 f.close()
 
