@@ -6,10 +6,11 @@ data.txt
 __pycache__/
 *.py[cod]
 *$py.class
-
+tables_matchmaker/matchmaker/migrations/*
+tables_matchmaker/logs
 # C extensions
 *.so
-
+.DS_STORE
 # Distribution / packaging
 .Python
 build/

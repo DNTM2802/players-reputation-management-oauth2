@@ -7,6 +7,9 @@ from rest_framework.response import Response
 # OAuth2
 from oauth2_provider.decorators import protected_resource
 from oauth2_provider.models import AccessToken
+# Rest Framework
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 # Serializers
 from auth_server.serializers.serializers import playerReputationSerializer
@@ -63,10 +66,11 @@ def rw_reputation(request):
         # Check if body is JSON with reputation update
         if all(k in request.data for k in ('skill_update', 'behaviour_update')):
             try:
-                player.skill += request.data['skill_update']
-                player.behaviour += request.data['behaviour_update']
+                player.skill += int(request.data['skill_update'])
+                player.behaviour += int(request.data['behaviour_update'])
                 player.save()
             except Exception as e:
+                print(e)
                 return Response({'detail': 'Could not update player\'s reputation.'}, status=500)
             return Response({'detail': 'Reputation updated.'}, status=200)
         else:

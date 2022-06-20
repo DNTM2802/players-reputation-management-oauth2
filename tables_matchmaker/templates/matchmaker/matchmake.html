@@ -1,0 +1,183 @@
+{% block content %}
+    <!DOCTYPE html>
+
+    <html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8"/>
+        <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS -->
+        <link
+                rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+                integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+                crossorigin="anonymous"
+        />
+
+        <title>User Agent</title>
+
+
+        <style>
+            body::after {
+                content: "";
+                background-image: url("https://cdn.dribbble.com/users/4976068/screenshots/14170846/game_pattern_4x.png");
+                background-size: cover;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                position: absolute;
+                z-index: -1;
+            }
+
+            .card {
+                max-width: 18em;
+                margin: 1%;
+                padding: 1%;
+            }
+
+            .games-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        </style>
+    </head>
+    <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Matchmaking</a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a href="http://localhost:8000/logout" class="btn btn-dark btn-sm" role="button" id="logout">Logout</a>
+
+    </nav>
+    <div class="row games-container">
+        <div class="col-md-4 card">
+            <div class="card-body">
+                <h5 class="card-title">game {{ room.game }}</h5>
+                <h5 class="card-title">max num players {{ room.game.num_players }}</h5>
+                <h5 class="card-title">current num players <span id="current_num_players"></span></h5>
+                <h5 class="card-title">roomid {{ room.id }}</h5>
+                <h5 id="match_status">NO MATCH</h5>
+                <form action="{% url 'game' %}?room_id={{ room.id }}" method="POST">
+                    {% csrf_token %}
+
+                    <button id="game_results" type="button submit" class="btn btn-danger" style="display:none">PLAY
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="players_container" class="row games-container">
+
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.9.3/js/bootstrap-select.min.js"></script>
+{% endblock %}
+{% block script %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+                const messages_container = document.getElementById('chat_box');
+                let room_id = "{{ room.id }}";
+
+                var loc = window.location;
+                var wsStart = 'ws://';
+
+                if (loc.protocol == 'https:') {
+                    var wsStart = 'wss://';
+                }
+
+                let chatSocket = new WebSocket(
+                    wsStart
+                    + window.location.host
+                    + '/ws/matchmaker/'
+                    + room_id
+                    + '/'
+                );
+
+                $('#game_results').click(function () {
+                    chatSocket.send(JSON.stringify({
+                        'message': 'results-incoming'
+                    }));
+                });
+
+                chatSocket.onopen = function (e) {
+                    // nothing
+                };
+
+                chatSocket.onmessage = function (e) {
+                    let message = JSON.parse(e.data)['message'];
+
+                    if (message['message-type'] == 'get-room-players') {
+                        let message_body = JSON.parse(message['message-body']);
+                        let players = "";
+                        for (let i = 0; i < message_body.length; i++) {
+                            players += `<div class="col-md-6 card">
+                            <div class="card-body">
+                                <h5 lass="card-title">player id ${message_body[i].fields['player_id']}</h5>
+                                <h5 lass="card-title">player skill ${message_body[i].fields['skill']}</h5>
+                                <h5 lass="card-title">player behaviour ${message_body[i].fields['behaviour']}</h5>
+                                <h5 lass="card-title">player skill preference ${message_body[i].fields['skill_preference']}</h5>
+                                <h5 lass="card-title">player behaviour preference ${message_body[i].fields['behaviour_preference']}</h5>
+                                <h5 lass="card-title">player granularity_preference ${message_body[i].fields['granularity_preference']}</h5>
+                            </div>
+                        </div>`
+
+                        }
+                        $('#players_container').html(players);
+                    } else if (message['message-type'] == 'update-players') {
+                        chatSocket.send(JSON.stringify({
+                            'message': 'get-room-players'
+                        }));
+                    } else if (message['message-type'] == 'update-room-match-status') {
+                        $('#match_status').text(message['message-body']);
+                    } else if (message['message-type'] == 'results-incoming') {
+                        window.location = "http://localhost:8002/game/?room_id=" + room_id;
+
+                    } else if (message['message-type'] == 'update-current-num-players') {
+                        $('#current_num_players').text(message['message-body']);
+                        // room is now full and can proceed to play
+                        if (message['message-body'] == {{ room.game.num_players }}) {
+                            $('#game_results').show();
+
+                        }
+                    }
+
+                };
+
+                chatSocket.onclose = function (e) {
+                    console.error('Chat socket closed unexpectedly');
+                };
+            }
+        );
+
+
+    </script>
+{% endblock %}
+
+</body>
+</html>
