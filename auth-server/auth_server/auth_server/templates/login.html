@@ -1,15 +1,30 @@
 
-{% block content %}      
+{% block content %}
+
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
 
 <!--Login-->
 <div class="container py-5">
   <h1>Login</h1>
   <form method="POST">
     {% csrf_token %}
-    {{ login_form }}
+    {% bootstrap_form login_form %}
     <button class="btn btn-primary" type="submit">Login</button>
   </form>
+    <div style="margin-bottom: 10px" class="text-center">
+        <a title="Login with CMD (Chave Móvel Digital)" style="cursor: pointer" href="/accounts/login_cmd" class="text-center btn btn-primary mt-3 btn-rounded waves-effect w-md waves-light">
+      <img width="200px" src="https://raw.githubusercontent.com/amagovpt/doc-AUTENTICACAO/main/logotipos/logo-autenticacao.gov-branco.png" alt="">
+  </a>
+    </div>
   <p class="text-center">Don't have an account? <a href="/register">Create an account</a>.</p>
 </div>
-
+{% include 'footer.html' %}
 {% endblock %}

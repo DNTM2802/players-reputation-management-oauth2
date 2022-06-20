@@ -112,13 +112,13 @@
                 chatSocket.onmessage = function (e) {
                     let message = JSON.parse(e.data)['message'];
 
-                    if (message['message-type'] == 'get-room-players') {
+                    if (message['message-type'] === 'get-room-players') {
                         let message_body = JSON.parse(message['message-body']);
                         let players = "";
+
                         for (let i = 0; i < message_body.length; i++) {
 
-                            console.log(message_body[i].fields);
-                            if (message_body[i].fields['is_winner'] == 1) {
+                            if (message_body[i].fields['is_winner'] === 1) {
                                 players += `<div class="col-md-4 card">
                                                 <div class="card-body">
                                                     <h5 class="card-title">WINNER </h5>
@@ -127,7 +127,7 @@
                                                     <h5 class="card-title">Added Behaviour Points ${message_body[i].fields['is_cheater']}</h5>
                                                 </div>
                                             </div>`;
-                            } else if (message_body[i].fields['is_winner'] == -1) {
+                            } else if (message_body[i].fields['is_winner'] === -1) {
                                 players += players += `<div class="col-md-4 card">
                                                 <div class="card-body">
                                                     <h5 class="card-title">LOSER </h5>

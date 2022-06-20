@@ -1,19 +1,17 @@
 version: "3.9"
-   
 services:
-
   auth_server:
-    build: ./auth-server/
-    command: python manage.py runserver 0.0.0.0:8000
+    build: ./auth-server/auth_server/
+    environment:
+      AUTH_SERVER_WEB_ADDRESS: ${AUTH_SERVER_WEB_ADDRESS-0.0.0.0}
+      AUTH_SERVER_WEB_PORT: ${AUTH_SERVER_WEB_PORT-8000}
+      TM_APPLICATION_CLIEND_ID: ${TM_APPLICATION_CLIEND_ID}
+      TM_APPLICATION_CLIENT_SECRET: ${TM_APPLICATION_CLIENT_SECRET}
+      TM_APPLICATION_REDIRECT_URI: ${TM_APPLICATION_REDIRECT_URI}
+      TM_APPLICATION_WEB_ADDRESS: ${TM_APPLICATION_WEB_ADDRESS-0.0.0.0}
+      TM_APPLICATION_WEB_PORT: ${TM_APPLICATION_WEB_PORT-8001}
     volumes:
-      - ./auth-server:/code
+      - ./auth-server/auth_server/:/code
+    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
-
-  resource_server:
-    build: ./resource-server/
-    command: python manage.py runserver 0.0.0.0:8001
-    volumes:
-      - ./auth-server:/code
-    ports:
-      - "8001:8001"

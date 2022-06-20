@@ -17,7 +17,7 @@ pytz==2022.1
 requests==2.27.1
 sqlparse==0.4.2
 urllib3==1.26.9
-wrapt==1.14.
+wrapt==1.14.1
 channels
 daphne==3.0.2
 channels-redis

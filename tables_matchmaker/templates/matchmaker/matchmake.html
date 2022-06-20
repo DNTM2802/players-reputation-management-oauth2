@@ -132,7 +132,7 @@
                 chatSocket.onmessage = function (e) {
                     let message = JSON.parse(e.data)['message'];
 
-                    if (message['message-type'] == 'get-room-players') {
+                    if (message['message-type'] === 'get-room-players') {
                         let message_body = JSON.parse(message['message-body']);
                         let players = "";
                         for (let i = 0; i < message_body.length; i++) {
@@ -149,19 +149,19 @@
 
                         }
                         $('#players_container').html(players);
-                    } else if (message['message-type'] == 'update-players') {
+                    } else if (message['message-type'] === 'update-players') {
                         chatSocket.send(JSON.stringify({
                             'message': 'get-room-players'
                         }));
-                    } else if (message['message-type'] == 'update-room-match-status') {
+                    } else if (message['message-type'] === 'update-room-match-status') {
                         $('#match_status').text(message['message-body']);
-                    } else if (message['message-type'] == 'results-incoming') {
+                    } else if (message['message-type'] === 'results-incoming') {
                         window.location = "http://localhost:8002/game/?room_id=" + room_id;
 
-                    } else if (message['message-type'] == 'update-current-num-players') {
+                    } else if (message['message-type'] === 'update-current-num-players') {
                         $('#current_num_players').text(message['message-body']);
                         // room is now full and can proceed to play
-                        if (message['message-body'] == {{ room.game.num_players }}) {
+                        if (message['message-body'] === {{ room.game.num_players }}) {
                             $('#game_results').show();
 
                         }
