@@ -34,11 +34,6 @@
                 z-index: -1;
             }
 
-            .card {
-                max-width: 18em;
-                margin: 1%;
-                padding: 1%;
-            }
 
             .games-container {
                 display: flex;
@@ -48,43 +43,64 @@
         </style>
     </head>
     <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
         <a class="navbar-brand" href="#">Matchmaking</a>
-        <button
-                class="navbar-toggler"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a href="http://localhost:8000/logout" class="btn btn-dark btn-sm" role="button" id="logout">Logout</a>
-
+        <a href="http://localhost:8000/logout" class="btn btn-dark btn-sm nav-item" role="button" id="logout">Logout</a>
     </nav>
-    <div class="row games-container">
-        <div class="col-md-4 card">
-            <div class="card-body">
-                <h5 class="card-title">game {{ room.game }}</h5>
-                <h5 class="card-title">max num players {{ room.game.num_players }}</h5>
-                <h5 class="card-title">current num players <span id="current_num_players"></span></h5>
-                <h5 class="card-title">roomid {{ room.id }}</h5>
-                <h5 id="match_status">NO MATCH</h5>
-                <form action="{% url 'game' %}?room_id={{ room.id }}" method="POST">
-                    {% csrf_token %}
-
-                    <button id="game_results" type="button submit" class="btn btn-danger" style="display:none">PLAY
-                    </button>
-                </form>
-
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card games-container text-center" style="max-width: none">
+                <div class="card-header">
+                    <span>Game Settings</span>
+                </div>
+                <div class="card-body" style="box-sizing: content-box">
+                    <div id="game_container" class="row">
+                        <div class="col-md-6">
+                            <div class="thumb-lg member-thumb mx-auto">
+                                <img style="max-width: none" width="200px"
+                                     src="https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/ColinStapczynski/phpa2wQPr.png"
+                                     class="img-thumbnail"
+                                     title="Game of {{ room.game }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="thumb-lg member-thumb mx-auto">
+                                <h5 class="card-title">Game type: {{ room.game }}</h5>
+                                <h5 class="card-title">Current players: <span id="current_num_players"></span></h5>
+                                <h5 class="card-title">Max players: {{ room.game.num_players }}</h5>
+                                <h5 class="card-title">Room ID: {{ room.id }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <form action="{% url 'game' %}?room_id={{ room.id }}" method="POST">
+                        {% csrf_token %}
+                        <button id="game_results" type="button submit" class="btn btn-danger" style="display:none">
+                            PLAY
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div id="players_container" class="row games-container">
-
+        <div class="col-md-5">
+            <div class="card games-container text-center" style="max-width: none">
+                <div class="card-header">
+                    <span>Your id = <span id="player_id"></span></span>
+                </div>
+                <div class="card-body" style="box-sizing: content-box">
+                    <div id="player_container" class="row">
+                    </div>
+                </div>
+                <div class="card-header">
+                    <span>Your opponents:</span>
+                </div>
+                <div class="card-body">
+                    <div id="opponents_container" class="row">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -100,8 +116,17 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
 
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
         $(document).ready(function () {
-                const messages_container = document.getElementById('chat_box');
+
+                let player_id = getCookie('player_id')
+                document.getElementById('player_id').innerHTML = player_id
+
                 let room_id = "{{ room.id }}";
 
                 var loc = window.location;
@@ -134,21 +159,34 @@
 
                     if (message['message-type'] === 'get-room-players') {
                         let message_body = JSON.parse(message['message-body']);
-                        let players = "";
+                        let opponents = "";
+                        let player = "";
                         for (let i = 0; i < message_body.length; i++) {
-                            players += `<div class="col-md-6 card">
-                            <div class="card-body">
-                                <h5 lass="card-title">player id ${message_body[i].fields['player_id']}</h5>
-                                <h5 lass="card-title">player skill ${message_body[i].fields['skill']}</h5>
-                                <h5 lass="card-title">player behaviour ${message_body[i].fields['behaviour']}</h5>
-                                <h5 lass="card-title">player skill preference ${message_body[i].fields['skill_preference']}</h5>
-                                <h5 lass="card-title">player behaviour preference ${message_body[i].fields['behaviour_preference']}</h5>
-                                <h5 lass="card-title">player granularity_preference ${message_body[i].fields['granularity_preference']}</h5>
-                            </div>
-                        </div>`
+                            if (message_body[i].fields['player_id'] === player_id) {
+                                player +=
+                                    `<div class="col-md-6">
+                                        <div class="thumb-lg member-thumb mx-auto">
+                                            <img style="max-width: none" width="200px" src="https://avatars.dicebear.com/v2/identicon/${message_body[i].fields['player_id']}.png" class="rounded-circle img-thumbnail" title="${message_body[i].fields['player_id']}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="thumb-lg member-thumb mx-auto">
+                                            <h5 class="card-title">Skill: ${message_body[i].fields['skill']}</h5>
+                                            <h5 class="card-title">Behaviour: ${message_body[i].fields['behaviour']}</h5>
+                                            <h5 class="card-title">Skill preference: ${message_body[i].fields['skill_preference']}</h5>
+                                            <h5 class="card-title">Behaviour preference: ${message_body[i].fields['behaviour_preference']}</h5>
+                                        </div>
+                                    </div>`
+                            } else {
+                                opponents +=
+                                    `<div id="${message_body[i].fields['player_id']}" class="thumb-lg member-thumb mx-auto">
+                                        <img style="max-width: none; margin: 10px" width="100px" src="https://avatars.dicebear.com/v2/identicon/${message_body[i].fields['player_id']}.png" class="rounded-circle img-thumbnail" title="${message_body[i].fields['player_id']}">
+                                    </div>`
+                            }
 
                         }
-                        $('#players_container').html(players);
+                        $('#player_container').html(player);
+                        $('#opponents_container').html(opponents);
                     } else if (message['message-type'] === 'update-players') {
                         chatSocket.send(JSON.stringify({
                             'message': 'get-room-players'

@@ -48,32 +48,55 @@
         </style>
     </head>
     <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
         <a class="navbar-brand" href="#">Matchmaking</a>
-        <button
-                class="navbar-toggler"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a href="http://localhost:8000/logout" class="btn btn-dark btn-sm" role="button" id="logout">Logout</a>
-
+        <a href="http://localhost:8000/logout" class="btn btn-dark btn-sm nav-item" role="button" id="logout">Logout</a>
     </nav>
-    <div class="row games-container">
-        <div class="col-md-4 card">
-            <div class="card-body">
-                <h5 class="card-title">game {{ room.game }}</h5>
-                <h5 class="card-title">roomid {{ room.id }}</h5>
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card games-container text-center" style="max-width: none">
+                <div class="card-header">
+                    <span>Game Settings</span>
+                </div>
+                <div class="card-body" style="box-sizing: content-box">
+                    <div id="game_container" class="row">
+                        <div class="col-md-6">
+                            <div class="thumb-lg member-thumb mx-auto">
+                                <img style="max-width: none" width="200px"
+                                     src="https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/ColinStapczynski/phpa2wQPr.png"
+                                     class="img-thumbnail"
+                                     title="Game of {{ room.game }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="thumb-lg member-thumb mx-auto">
+                                <h5 class="card-title">Game type: {{ room.game }}</h5>
+                                <h5 class="card-title">Room ID: {{ room.id }}</h5>
+                                <h5 class="card-title">Game status: finished</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="http://localhost:8003" class="btn btn-info" role="button">Return to Games</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card games-container text-center" style="max-width: none">
+                <div class="card-header">
+                    <span>Results:</span>
+                </div>
+                <div class="card-body" style="box-sizing: content-box">
+                    <div id="results_container" class="row">
+                    </div>
+                </div>
+                <div class="card-footer" id="personal_result" style="box-sizing: content-box">
+
+                </div>
             </div>
         </div>
     </div>
-
-    <div id="players_container" class="row games-container">
 
     </div>
     <!-- Optional JavaScript -->
@@ -84,8 +107,16 @@
 {% endblock %}
 {% block script %}
     <script>
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
         $(document).ready(function () {
-                const messages_container = document.getElementById('chat_box');
+                let player_id = getCookie('player_id')
+
                 let room_id = "{{ room.id }}";
 
                 var loc = window.location;
@@ -118,38 +149,38 @@
 
                         for (let i = 0; i < message_body.length; i++) {
 
+                            if (message_body[i].fields['player_id'] === player_id) {
+                                if (message_body[i].fields['is_winner'] === 1) {
+                                    document.getElementById('personal_result').innerHTML = "You WON!";
+                                    document.getElementById('personal_result').classList.add("bg-success");
+                                } else if (message_body[i].fields['is_winner'] === -1) {
+                                    document.getElementById('personal_result').innerHTML = "You LOST...";
+                                    document.getElementById('personal_result').classList.add("bg-danger");
+                                } else {
+                                    document.getElementById('personal_result').innerHTML = "You TIED.";
+                                    document.getElementById('personal_result').classList.add("bg-secondary");
+                                }
+                            }
+
                             if (message_body[i].fields['is_winner'] === 1) {
-                                players += `<div class="col-md-4 card">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">WINNER </h5>
-                                                    <h5 class="card-title">player_id ${message_body[i].fields['player_id']}</h5>
-                                                    <h5 class="card-title">Added Skill Points: ${message_body[i].fields['is_winner']}</h5>
-                                                    <h5 class="card-title">Added Behaviour Points ${message_body[i].fields['is_cheater']}</h5>
-                                                </div>
-                                            </div>`;
+                                players +=
+                                    `<div id="${message_body[i].fields['player_id']}" class="thumb-lg member-thumb mx-auto">
+                                        <img style="max-width: none; margin: 10px; border: 5px solid #00FF00" width="100px" src="https://avatars.dicebear.com/v2/identicon/${message_body[i].fields['player_id']}.png" class="rounded-circle img-thumbnail" title="${message_body[i].fields['player_id']}\nWINNER\nAdded skill points:${message_body[i].fields['is_winner']}\nAdded behaviour points: ${message_body[i].fields['is_cheater']}">
+                                    </div>`;
                             } else if (message_body[i].fields['is_winner'] === -1) {
-                                players += players += `<div class="col-md-4 card">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">LOSER </h5>
-                                                    <h5 class="card-title">player_id ${message_body[i].fields['player_id']}</h5>
-                                                    <h5 class="card-title">Added Skill Points: ${message_body[i].fields['is_winner']}</h5>
-                                                    <h5 class="card-title">Added Behaviour Points ${message_body[i].fields['is_cheater']}</h5>
-                                                </div>
-                                            </div>`;
+                                players += players +=
+                                    `<div id="${message_body[i].fields['player_id']}" class="thumb-lg member-thumb mx-auto">
+                                        <img style="max-width: none; margin: 10px; border: 5px solid #FF0000" width="100px" src="https://avatars.dicebear.com/v2/identicon/${message_body[i].fields['player_id']}.png" class="rounded-circle img-thumbnail" title="${message_body[i].fields['player_id']}\nLOSER\nAdded skill points:${message_body[i].fields['is_winner']}\nAdded behaviour points: ${message_body[i].fields['is_cheater']}">
+                                    </div>`;
                             } else {
-                                players += `<div class="col-md-4 card">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">NOT WINNER NOR LOSER </h5>
-                                                    <h5 class="card-title">player_id ${message_body[i].fields['player_id']}</h5>
-                                                    <h5 class="card-title">Added Skill Points: ${message_body[i].fields['is_winner']}</h5>
-                                                    <h5 class="card-title">Added Behaviour Points ${message_body[i].fields['is_cheater']}</h5>
-                                                </div>
-                                            </div>`;
+                                players +=
+                                    `<div id="${message_body[i].fields['player_id']}" class="thumb-lg member-thumb mx-auto">
+                                        <img style="max-width: none; margin: 10px; border: 5px solid #808080" width="100px" src="https://avatars.dicebear.com/v2/identicon/${message_body[i].fields['player_id']}.png" class="rounded-circle img-thumbnail" title="${message_body[i].fields['player_id']}\nTIED\nAdded skill points:${message_body[i].fields['is_winner']}\nAdded behaviour points: ${message_body[i].fields['is_cheater']}">
+                                    </div>`;
                             }
                         }
-                        $('#players_container').html(players);
+                        $('#results_container').html(players);
                     }
-                    ;
 
                     chatSocket.onclose = function (e) {
                         console.error('Chat socket closed unexpectedly');
