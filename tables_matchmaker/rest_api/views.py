@@ -25,7 +25,10 @@ def play_game(request):
         redirect: if all is correct redirects to authorization server sending over only granularity
     """
 
+    request.session.flush()
+
     if request.method == "GET":
+
         game = request.GET.get("game", None)
         skill = request.GET.get("skill", None)
         behaviour = request.GET.get("behaviour", None)
