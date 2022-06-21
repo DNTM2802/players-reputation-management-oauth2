@@ -77,46 +77,46 @@ def preferences_are_matchable(player1, player2):
 
     # SKILL
     player_pref = player1.skill_preference
-    player2_skill = eval(player2.skill)
-    player1_skill = eval(player1.skill)
+    player2_skill = player2.skill.split("/")
+    player1_skill = player1.skill.split("/")
 
     if player_pref == "l":
         if not are_reputations_matchable(player1_skill, "l", player2_skill):
             return False
     elif player_pref == "le":
-        if not are_reputations_matchable(player1_skill, "l", player2_skill):
+        if not are_reputations_matchable(player1_skill, "le", player2_skill):
             return False
-    elif player_pref == "e":
-        if not are_reputations_matchable(player1_skill, "l", player2_skill):
+    elif player_pref == "eq":
+        if not are_reputations_matchable(player1_skill, "eq", player2_skill):
             return False
     elif player_pref == "ge":
-        if not are_reputations_matchable(player1_skill, "l", player2_skill):
+        if not are_reputations_matchable(player1_skill, "ge", player2_skill):
             return False
     elif player_pref == "g":
-        if not are_reputations_matchable(player1_skill, "l", player2_skill):
+        if not are_reputations_matchable(player1_skill, "g", player2_skill):
             return False
     else:
         pass
 
     # Behaviour
     player_pref = player1.behaviour_preference
-    player2_behaviour = eval(player2.behaviour)
-    player1_behaviour = eval(player1.behaviour)
+    player2_behaviour = player2.behaviour.split("/")
+    player1_behaviour = player1.behaviour.split("/")
 
     if player_pref == "l":
         if not are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
             return False
     elif player_pref == "le":
-        if not are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
+        if not are_reputations_matchable(player1_behaviour, "le", player2_behaviour):
             return False
-    elif player_pref == "e":
-        if not are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
+    elif player_pref == "eq":
+        if not are_reputations_matchable(player1_behaviour, "eq", player2_behaviour):
             return False
     elif player_pref == "ge":
-        if not are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
+        if not are_reputations_matchable(player1_behaviour, "ge", player2_behaviour):
             return False
     elif player_pref == "g":
-        if not are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
+        if not are_reputations_matchable(player1_behaviour, "g", player2_behaviour):
             return False
     else:
         pass
