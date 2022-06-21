@@ -77,55 +77,51 @@ def preferences_are_matchable(player1, player2):
 
     # SKILL
     player_pref = player1.skill_preference
-    player2_skill = eval(player2.skill)
-    player1_skill = eval(player1.skill)
+    player2_skill = player2.skill.split("/")
+    player1_skill = player1.skill.split("/")
 
-    if player_pref == "l":
-        if not are_reputations_matchable(player1_skill, "l", player2_skill):
-            return False
-    elif player_pref == "le":
-        if not are_reputations_matchable(player1_skill, "l", player2_skill):
-            return False
-    elif player_pref == "e":
-        if not are_reputations_matchable(player1_skill, "l", player2_skill):
-            return False
-    elif player_pref == "ge":
-        if not are_reputations_matchable(player1_skill, "l", player2_skill):
-            return False
-    elif player_pref == "g":
-        if not are_reputations_matchable(player1_skill, "l", player2_skill):
-            return False
-    else:
-        pass
+    skill_result = False
+    behaviour_result = False
+
+    if player_pref in ["l", "le"]:
+        if are_reputations_matchable(player1_skill, "l", player2_skill):
+            skill_result = True
+    elif player_pref == "eq":
+        if are_reputations_matchable(player1_skill, "eq", player2_skill):
+            skill_result = True
+    elif player_pref in ["g", "ge"]:
+        if are_reputations_matchable(player1_skill, "g", player2_skill):
+            skill_result = True
 
     # Behaviour
     player_pref = player1.behaviour_preference
-    player2_behaviour = eval(player2.behaviour)
-    player1_behaviour = eval(player1.behaviour)
+    player2_behaviour = player2.behaviour.split("/")
+    player1_behaviour = player1.behaviour.split("/")
 
-    if player_pref == "l":
-        if not are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
-            return False
-    elif player_pref == "le":
-        if not are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
-            return False
-    elif player_pref == "e":
-        if not are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
-            return False
-    elif player_pref == "ge":
-        if not are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
-            return False
-    elif player_pref == "g":
-        if not are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
-            return False
+    if player_pref in ["l", "le"]:
+        if are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
+            behaviour_result = True
+    elif player_pref == "eq":
+        if are_reputations_matchable(player1_behaviour, "eq", player2_behaviour):
+            behaviour_result = True
+    elif player_pref in ["g", "ge"]:
+        if are_reputations_matchable(player1_behaviour, "g", player2_behaviour):
+            behaviour_result = True
     else:
         pass
-
-    return True
+    l.log(f"skill_result: {skill_result}")
+    l.log(f"behaviour_result: {behaviour_result}")
+    return skill_result and behaviour_result
 
 
 def are_reputations_matchable(rep1, condition, rep2):
-    # Strech bins
+    # Stretch bins
+    l.log(rep1)
+    rep1[1] = int(rep1[1])
+    rep1[0] = int(rep1[0])
+    rep2[1] = int(rep2[1])
+    rep2[0] = int(rep2[0])
+
     factor1 = 10 / rep1[1]
     max_1 = (rep1[0] * 10) / rep1[1]
     min_1 = (rep1[0] - 1) * factor1
@@ -134,24 +130,15 @@ def are_reputations_matchable(rep1, condition, rep2):
     max_2 = (rep2[0] * 10) / rep2[1]
     min_2 = (rep2[0] - 1) * factor2
 
-    # If intersect, all possible conditions are met
+    # If intersected, all possible conditions are met
     if max_1 > min_2 and min_1 < max_2:
         return True
 
     if condition == 'g':
-        return max_1 < min_2
-
-    if condition == 'ge':
         return max_1 <= min_2
 
-    if condition == 'eq':
-        return max_1 == min_2
-
-    if condition == 'le':
-        return max_2 <= min_1
-
     if condition == 'l':
-        return max_2 < min_1
+        return max_2 <= min_1
 
     return False
 
