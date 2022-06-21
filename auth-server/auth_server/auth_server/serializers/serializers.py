@@ -28,12 +28,14 @@ def playerReputationSerializer(player, popped_scopes):
             n_of_bins = n_of_bins_max
 
     # Retrieve player ranks
-    rank_skill = Player.objects.filter(skill__gt=player_skill).count() + 1
-    rank_behaviour = Player.objects.filter(behaviour__gt=player_behaviour).count() + 1
+    rank_skill = Player.objects.filter(is_superuser=0, skill__gt=player_skill).count() + 1
+    rank_behaviour = Player.objects.filter(is_superuser=0, behaviour__gt=player_behaviour).count() + 1
 
     # Stretch ranks bins to provide anonymity
     rank_skill = math.ceil((rank_skill * n_of_bins) / total_players)
+    rank_skill = min(rank_skill, n_of_bins)
     rank_behaviour = math.ceil((rank_behaviour * n_of_bins) / total_players)
+    rank_behaviour = min(rank_behaviour, n_of_bins)
 
     return {'skill': f"{rank_skill}/{n_of_bins}", 'behaviour': f"{rank_behaviour}/{n_of_bins}"}
 
