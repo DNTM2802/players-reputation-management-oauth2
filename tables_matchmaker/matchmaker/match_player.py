@@ -74,51 +74,63 @@ def preferences_are_matchable(player1, player2):
     """
     for skill or behaviour checks if player preferences are a match with the opponent's preferences
     """
+    global l
 
     # SKILL
-    player_pref = player1.skill_preference
-    player2_skill = player2.skill.split("/")
+    player1_skill_pref = player1.skill_preference
     player1_skill = player1.skill.split("/")
-
+    player2_skill = player2.skill.split("/")
 
     skill_result = False
     behaviour_result = False
 
-    if player_pref in ["l", "le"]:
-        if are_reputations_matchable(player1_skill, "l", player2_skill):
-            skill_result = True
-    elif player_pref == "eq":
-        if are_reputations_matchable(player1_skill, "eq", player2_skill):
-            skill_result = True
-    elif player_pref in ["g", "ge"]:
-        if are_reputations_matchable(player1_skill, "g", player2_skill):
-            skill_result = True
+    if player1_skill_pref == "l":
+        skill_result = compare_reputations(player2_skill, "l", player1_skill)
+    elif player1_skill_pref == "g":
+        skill_result = compare_reputations(player2_skill, "g", player1_skill)
+    elif player1_skill_pref == "eq":
+        skill_result = compare_reputations(player2_skill, "eq", player1_skill)
+    elif player1_skill_pref == "le":
+        skill_result = compare_reputations(player2_skill, "l", player1_skill) \
+                       or compare_reputations(player2_skill, "eq", player1_skill)
+    elif player1_skill_pref == "ge":
+        skill_result = compare_reputations(player2_skill, "g", player1_skill) \
+                       or compare_reputations(player2_skill, "eq", player1_skill)
     else:
         pass
 
     # Behaviour
-    player_pref = player1.behaviour_preference
-    player2_behaviour = player2.behaviour.split("/")
+    player1_behaviour_pref = player1.behaviour_preference
     player1_behaviour = player1.behaviour.split("/")
+    player2_behaviour = player2.behaviour.split("/")
 
-    if player_pref in ["l", "le"]:
-        if are_reputations_matchable(player1_behaviour, "l", player2_behaviour):
-            behaviour_result = True
-    elif player_pref == "eq":
-        if are_reputations_matchable(player1_behaviour, "eq", player2_behaviour):
-            behaviour_result = True
-    elif player_pref in ["g", "ge"]:
-        if are_reputations_matchable(player1_behaviour, "g", player2_behaviour):
-            behaviour_result = True
+    if player1_behaviour_pref == "l":
+        behaviour_result = compare_reputations(player2_behaviour, "l", player1_behaviour)
+    elif player1_behaviour_pref == "g":
+        behaviour_result = compare_reputations(player2_behaviour, "g", player1_behaviour)
+    elif player1_behaviour_pref == "eq":
+        behaviour_result = compare_reputations(player2_behaviour, "eq", player1_behaviour)
+    elif player1_behaviour_pref == "le":
+        behaviour_result = compare_reputations(player2_behaviour, "l", player1_behaviour) \
+                           or compare_reputations(player2_behaviour, "eq", player1_behaviour)
+    elif player1_behaviour_pref == "ge":
+        behaviour_result = compare_reputations(player2_behaviour, "g", player1_behaviour) \
+                           or compare_reputations(player2_behaviour, "eq", player1_behaviour)
     else:
         pass
-    
-    l.log(f"skill_result: {skill_result}")
-    l.log(f"behaviour_result: {behaviour_result}")
+
+    l.log(f"{player1.player_id} skill: {player1_skill}")
+    l.log(f"{player1.player_id} behaviour: {player1_behaviour}")
+    l.log(f"{player2.player_id} skill: {player2_skill}")
+    l.log(f"{player2.player_id} behaviour: {player2_behaviour}")
+    l.log(f"{player1.player_id} wants {player1.skill_preference} skill.")
+    l.log(f"{player1.player_id} wants {player1.behaviour_preference} behaviour.")
+    l.log(f"{player1.player_id} matches with {player2.player_id} in terms of skill? {skill_result}")
+    l.log(f"{player1.player_id} matches with {player2.player_id} in terms of behaviour? {behaviour_result}")
     return skill_result and behaviour_result
 
 
-def are_reputations_matchable(rep1, condition, rep2):
+def compare_reputations(rep1, condition, rep2):
     # Stretch bins
     l.log(rep1)
     rep1[1] = int(rep1[1])
@@ -134,15 +146,21 @@ def are_reputations_matchable(rep1, condition, rep2):
     max_2 = (rep2[0] * 10) / rep2[1]
     min_2 = (rep2[0] - 1) * factor2
 
-    # If intersected, all possible conditions are met
+    # If intersected in more than one point, all possible conditions are met
     if max_1 > min_2 and min_1 < max_2:
         return True
 
+    # If don't intersect or intersect in only one point, then r1 > r2 only if r1 ends before r2 starts.
     if condition == 'g':
-        return max_1 <= min_2
+        return max_1 < min_2
 
+    # If don't intersect or intersect in only one point, then r1 < r2 only if r2 ends before r1 starts.
     if condition == 'l':
-        return max_2 <= min_1
+        return max_2 < min_1
+
+    # Intersect in one point (extremes of both reputations)? Then they may be equal
+    if condition == 'eq':
+        return max_1 == min_2 or min_1 == max_2
 
     return False
 
