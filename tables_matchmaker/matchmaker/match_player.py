@@ -80,6 +80,7 @@ def preferences_are_matchable(player1, player2):
     player2_skill = player2.skill.split("/")
     player1_skill = player1.skill.split("/")
 
+
     skill_result = False
     behaviour_result = False
 
@@ -92,6 +93,8 @@ def preferences_are_matchable(player1, player2):
     elif player_pref in ["g", "ge"]:
         if are_reputations_matchable(player1_skill, "g", player2_skill):
             skill_result = True
+    else:
+        pass
 
     # Behaviour
     player_pref = player1.behaviour_preference
@@ -109,6 +112,7 @@ def preferences_are_matchable(player1, player2):
             behaviour_result = True
     else:
         pass
+    
     l.log(f"skill_result: {skill_result}")
     l.log(f"behaviour_result: {behaviour_result}")
     return skill_result and behaviour_result
