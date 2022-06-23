@@ -29,6 +29,7 @@ python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install -r requirements.txt
 python3 migrate
+python3 manage.py loaddata fixtures/game.json --app matchmaker.game
 ```
 With the virtual environment created and the requirements installed, you will now have to run a docker container, which will work as a cache database for the Django Channels (websockets) module:
 ```
