@@ -150,7 +150,7 @@ async def new_player():
 
 
 async def main():
-    preferences = ["l", "le", "eq", "g", "ge", "any"]
+    preferences = ["l", "le", "eq", "g", "ge"]
     games = ["chess", "monopoly", "peixinho"]
     counter = 1
     while True:
