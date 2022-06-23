@@ -58,6 +58,17 @@ python3 run.py
 ```
 The User Agent web interface will be available in http://127.0.0.1:8003. You should access it if you want to play a game.
 
+There are bots available to fill rooms with players without having to use the browser. 
+In a new terminal:
+```
+cd bots
+python3 -m venv venv
+source venv/bin/activate
+python3 -m pip install -r requirements.txt
+python3 bot.py
+```
+Advised usage of bots: Play a game like "peixinho", which has 4 players, and join a room. Run bot.py and wait until the bots join the room, play the game and see the results!
+
 ## OAuth2-Resource Server usage
 You may want to interact with the OAuth2-Resource Server without the given application (Tables Matchmaker). For that, the API description is below.
 ### Usage example
