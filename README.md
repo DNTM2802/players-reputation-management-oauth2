@@ -9,11 +9,15 @@ cd auth-server/auth_server
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install -r requirements.txt
-python3 manage.py loaddata fixtures/player.json --app accounts.player
-python3 manage.py loaddata fixtures/application.json --app oauth2_provider.application
 python3 manage.py runserver 8000
 ```
-The above commands create a Python virtual environment, install the requirements in it, populate the database with initial test data and run the project in the port 8000. You can access the OAuth2-Resource Server web interface in http://127.0.0.1:8000.
+The above commands create a Python virtual environment, install the requirements in it,  run the project in the port 8000. You can access the OAuth2-Resource Server web interface in http://127.0.0.1:8000.
+
+When the server is started, an empty SQLite database is created. To populate the database with test players, an admin user and the OAuth2.0 appllication, you can run the below commands:
+```
+python3 manage.py loaddata fixtures/player.json --app accounts.player
+python3 manage.py loaddata fixtures/application.json --app oauth2_provider.application
+```
 
 In the file `data.txt` you can find the credentials for the test users and the credentials for the admin user. If you want to interact with the admin panel, you can go to http://127.0.0.1:8000/admin. The admin panel allows to manipulate users directly, as well as manipulate OAuth2.0 tokens, applications and so on.
 
