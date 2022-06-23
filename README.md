@@ -13,14 +13,14 @@ python3 manage.py runserver 8000
 ```
 The above commands create a Python virtual environment, install the requirements in it,  run the project in the port 8000. You can access the OAuth2-Resource Server web interface in http://127.0.0.1:8000.
 
-When the server is started, an empty SQLite database is created. To create the tables and populate the database with test players, an admin user and the OAuth2.0 appllication, you can run the below commands:
+When the server is started, an empty SQLite database is created. To create the tables and populate the database with test players, an admin user and the OAuth2.0 appllication, you can run the below commands in another terminal window (within the virtual environment):
 ```
 python3 manage.py migrate
 python3 manage.py loaddata fixtures/player.json --app accounts.player
 python3 manage.py loaddata fixtures/application.json --app oauth2_provider.application
 ```
 
-In the file `data.txt` you can find the credentials for the test users and the credentials for the admin user. If you want to interact with the admin panel, you can go to http://127.0.0.1:8000/admin. The admin panel allows to manipulate users directly, as well as manipulate OAuth2.0 tokens, applications and so on.
+In the file `auth_server/data.txt` you can find the credentials for the test users and the credentials for the admin user. If you want to interact with the admin panel, you can go to http://127.0.0.1:8000/admin. The admin panel allows to manipulate users directly, as well as manipulate OAuth2.0 tokens, applications and so on.
 
 Now, you can run the Tables Matchmaker and the Match Manager. Start a new terminal and run the below commands:
 ```
@@ -28,10 +28,10 @@ cd tables_matchmaker
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install -r requirements.txt
-python3 migrate
+python3 manage.py migrate
 python3 manage.py loaddata fixtures/game.json --app matchmaker.game
 ```
-With the virtual environment created and the requirements installed, you will now have to run a docker container, which will work as a cache database for the Django Channels (websockets) module:
+With the virtual environment created and the requirements installed, you will now have to run a docker container, which will work as a database for the Django Channels (websockets) module:
 ```
 docker run -p 6379:6379 -d redis:5
 ```
@@ -41,7 +41,7 @@ cd tables_matchmaker
 source venv/bin/activate
 python3 manage.py runworker channels --settings=tables_matchmaker.settings -v2
 ```
-And finally, run the TM application:
+And finally, run the TM application in a new terminal:
 ```
 cd tables_matchmaker
 source venv/bin/activate
