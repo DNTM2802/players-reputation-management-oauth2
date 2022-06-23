@@ -41,7 +41,7 @@ source venv/bin/activate
 daphne tables_matchmaker.asgi:application --port 8002 --bind 127.0.0.1 -v2
 ```
 
-The Tables Matchmaker web interface will be now available in port 8002. <You are not supposed to access this interface directly. To interact with it, you will need to run the User Agent in a new terminal:
+The Tables Matchmaker web interface will be now available in port 8002. **You are not supposed to access this interface directly**. To interact with it, you will need to run the User Agent in a new terminal:
 ```
 cd user_agent
 python3 -m venv venv
