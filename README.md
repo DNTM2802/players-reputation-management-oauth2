@@ -13,8 +13,9 @@ python3 manage.py runserver 8000
 ```
 The above commands create a Python virtual environment, install the requirements in it,  run the project in the port 8000. You can access the OAuth2-Resource Server web interface in http://127.0.0.1:8000.
 
-When the server is started, an empty SQLite database is created. To populate the database with test players, an admin user and the OAuth2.0 appllication, you can run the below commands:
+When the server is started, an empty SQLite database is created. To create the tables and populate the database with test players, an admin user and the OAuth2.0 appllication, you can run the below commands:
 ```
+python3 manage.py migrate
 python3 manage.py loaddata fixtures/player.json --app accounts.player
 python3 manage.py loaddata fixtures/application.json --app oauth2_provider.application
 ```
