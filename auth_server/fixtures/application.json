@@ -5,7 +5,7 @@
         "fields": {
             "client_id": "7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R",
             "user": 0,
-            "redirect_uris": "http://127.0.0.1:8002/exchange",
+            "redirect_uris": "http://localhost:8002/exchange/",
             "client_type": "confidential",
             "authorization_grant_type": "authorization-code",
             "client_secret": "MSbi0l3apzI5DHtFNEBdntkmzccAb7vO2ZANej2irDEiaTUfEvAb1VBUrfYUaghf5TKNypl5zU69a2EcyVUGil10Utq8qtkjFJyH47KsjnJDSEFQo971ZgWPEbRzjBd1",
