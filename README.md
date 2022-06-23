@@ -5,15 +5,20 @@ You will have to run the 3 separate projects in order to interact with the whole
 
 Start by running the OAuth2-Resource Server, by executing the following commands in a new terminal:
 ```
-cd auth-server/auth_server
+cd auth_server
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install -r requirements.txt
-python3 manage.py loaddata fixtures/player.json --app accounts.player
-python3 manage.py loaddata fixtures/application.json --app oauth2_provider.application
 python3 manage.py runserver 8000
 ```
-The above commands create a Python virtual environment, install the requirements in it, populate the database with initial test data and run the project in the port 8000. You can access the OAuth2-Resource Server web interface in http://127.0.0.1:8000.
+The above commands create a Python virtual environment, install the requirements in it,  run the project in the port 8000. You can access the OAuth2-Resource Server web interface in http://127.0.0.1:8000.
+
+When the server is started, an empty SQLite database is created. To create the tables and populate the database with test players, an admin user and the OAuth2.0 appllication, you can run the below commands:
+```
+python3 manage.py migrate
+python3 manage.py loaddata fixtures/player.json --app accounts.player
+python3 manage.py loaddata fixtures/application.json --app oauth2_provider.application
+```
 
 In the file `data.txt` you can find the credentials for the test users and the credentials for the admin user. If you want to interact with the admin panel, you can go to http://127.0.0.1:8000/admin. The admin panel allows to manipulate users directly, as well as manipulate OAuth2.0 tokens, applications and so on.
 
@@ -23,6 +28,8 @@ cd tables_matchmaker
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install -r requirements.txt
+python3 migrate
+python3 manage.py loaddata fixtures/game.json --app matchmaker.game
 ```
 With the virtual environment created and the requirements installed, you will now have to run a docker container, which will work as a cache database for the Django Channels (websockets) module:
 ```
@@ -58,7 +65,7 @@ Authorization endpoint example:
 ```
 http://localhost:8000/o/authorize?state=random_state_string&client_id=7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R&response_type=code&scope=read_3%20write
 ```
-`client_id` asks for an authorization grant to read player's reputation with level 3 of anonymity and to write player's reputation. The above `client_id` is the TM, but you can create a new application by accessing the Admin panel in http://127.0.0.1:8000/admin with the Admin credentials in `auth-server/auth_server/data.txt`.
+`client_id` asks for an authorization grant to read player's reputation with level 3 of anonymity and to write player's reputation. The above `client_id` is the TM, but you can create a new application by accessing the Admin panel in http://127.0.0.1:8000/admin with the Admin credentials in `auth_server/data.txt`.
 
 When an Access Token is provided for the above grant, it has the following constraints:
 - It is provided by including the `Authorization` header in the request, with the value `Bearer {TOKEN}`
