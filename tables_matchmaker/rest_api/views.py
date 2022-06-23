@@ -71,7 +71,6 @@ def exchange(request):
 
         request.session['skill'] = reputation['skill']
         request.session['behaviour'] = reputation['behaviour']
-
         response = HttpResponseRedirect(
             redirect_to=f"http://localhost:8002/matchmake")
         response.set_cookie('player_id', request.session.session_key)

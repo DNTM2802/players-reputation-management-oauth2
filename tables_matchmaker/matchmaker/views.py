@@ -34,7 +34,6 @@ def room(request, room_id):
 def matchmake(request):
     player_id = request.COOKIES.get('player_id')
     global l
-
     if player_id:
         s = SessionStore(session_key=player_id)
 
@@ -75,7 +74,7 @@ def matchmake(request):
                 response.set_cookie('session_id', s.session_key)
                 return response
 
-    return redirect("https://localhost:8000/logout")
+    return redirect("http://localhost:8000/logout")
 
 
 def match_manager(request):
