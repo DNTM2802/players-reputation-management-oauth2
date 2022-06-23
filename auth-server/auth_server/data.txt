@@ -1,0 +1,84 @@
+## PLAYERS ##
+
+username: quickvictorious
+nic: 85733188
+password: 5W3jCJwM
+
+username: thriftwrithe
+nic: 21724951
+password: F2QzpTxy
+
+username: insidiousexaggerate
+nic: 14800388
+password: BFMqK2xW
+
+username: rnawild
+nic: 26910416
+password: rnHNXz45
+
+username: mournernautilus
+nic: 61680008
+password: xTvMts74
+
+username: alongsat
+nic: 92878409
+password: uVB6Qxda
+
+username: solvesalesman
+nic: 26535708
+password: 7Zvw4MeT
+
+username: bozohuh
+nic: 37159180
+password: vN2Lppfa
+
+username: dugoutbrag
+nic: 33015673
+password: d7dRzURL
+
+username: mosquitoefleet
+nic: 29840749
+password: 9eGZSuLj
+
+username: clowntransparent
+nic: 20047423
+password: Seych9gF
+
+username: wheelhouseinstruct
+nic: 50348165
+password: wD8AErCD
+
+username: arraypair
+nic: 19386056
+password: WVvSxM5e
+
+username: tabooregister
+nic: 17061657
+password: S2GtyJDE
+
+username: adorablepig
+nic: 64598352
+password: 2xX5AzUx
+
+username: anxietyremaining
+nic: 21359341
+password: 9YQ3LfjY
+
+username: tibiafirst
+nic: 49291900
+password: RG2cL8bF
+
+username: oceansquawk
+nic: 74592043
+password: k6P897mB
+
+username: admin
+nic: 00000000
+password: Cda77Hg26ABsKy7K
+
+## OAUTH2 APPLICATIONS ##
+
+name: Tables' Manager
+client_id: 7PX424fslBn2LZ7qWtd34Kog0VjWTSIVci16xA9R
+client_secret: MSbi0l3apzI5DHtFNEBdntkmzccAb7vO2ZANej2irDEiaTUfEvAb1VBUrfYUaghf5TKNypl5zU69a2EcyVUGil10Utq8qtkjFJyH47KsjnJDSEFQo971ZgWPEbRzjBd1
+redirect_uris: http://127.0.0.1:8002/exchange
