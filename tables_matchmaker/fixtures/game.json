@@ -1,0 +1,26 @@
+[
+{
+    "model": "matchmaker.game",
+    "pk": 0,
+    "fields": {
+        "name": "chess",
+        "num_players": 2
+    }
+},
+{
+    "model": "matchmaker.game",
+    "pk": 1,
+    "fields": {
+        "name": "monopoly",
+        "num_players": 3
+    }
+},
+{
+    "model": "matchmaker.game",
+    "pk": 2,
+    "fields": {
+        "name": "peixinho",
+        "num_players": 4
+    }
+}
+]
