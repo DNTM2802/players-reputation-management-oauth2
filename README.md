@@ -1,4 +1,4 @@
-# players-reputation-management-oauth2
+# Players' Reputation Management with OAuth2 using Django
 
 - This project implements a mechanism for management of players’ reputation with OAuth2.0. An OAuth2.0 Server is implemented alongside a Reputation Manager (Resource Server), providing authentication to the resource owners and protected resources to the OAuth2.0 applications, which in this case is the Tables’ Manager. This entity, alongside the Match Manager, provides matchmaking capabilities to gather the players according to their preferences and control the execution of the games. 
 - It also allows the authentication of the players with CMD (Autenticacao.gov), providing a reputation profile for each player in the OAuth2.0 Server which may be accessed via credentials or via CMD, the official IdP that Portugal provides to its citizens. It also allows the registration of new players through the CMD.
